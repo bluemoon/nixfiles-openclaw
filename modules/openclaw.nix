@@ -13,10 +13,9 @@
     exposePluginPackages = false;
 
     # Use explicit instance so the submodule type system provides defaults
-    # (works around missing nixMode in defaultInstance hardcoded attrset)
-    instances.default = { };
-
-    config = {
+    # (works around missing nixMode in defaultInstance hardcoded attrset).
+    # Config goes on the instance to avoid recursiveUpdate null-clobbering.
+    instances.default.config = {
       gateway = {
         mode = "local";
         auth = { token = "/run/agenix/openclaw-gateway-token"; };
@@ -26,10 +25,8 @@
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ ]; # TODO: add your Telegram chat ID here
       };
-    };
 
-    config.env.vars = {
-      ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
+      env.vars = { ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key"; };
     };
 
     bundledPlugins = {
