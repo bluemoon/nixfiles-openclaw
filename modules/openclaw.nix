@@ -6,6 +6,10 @@
     enable = true;
     documents = ./openclaw-documents;
 
+    # Use explicit instance so the submodule type system provides defaults
+    # (works around missing nixMode in defaultInstance hardcoded attrset)
+    instances.default = { };
+
     config = {
       gateway = {
         mode = "local";
