@@ -8,6 +8,10 @@
     # Exclude tools with broken downloads or that we don't need
     excludeTools = [ "bird" "sonoscli" "imsg" "gogcli" "goplaces" ];
 
+    # Plugin packages are already bundled in the openclaw package and available
+    # via the gateway wrapper PATH — don't also add them to home.packages
+    exposePluginPackages = false;
+
     # Use explicit instance so the submodule type system provides defaults
     # (works around missing nixMode in defaultInstance hardcoded attrset)
     instances.default = { };
