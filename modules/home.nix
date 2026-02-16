@@ -133,6 +133,9 @@
     pkgs.lazygit
     pkgs.delta
 
+    # AI
+    inputs.claude-code.packages.${pkgs.system}.default
+
     # Misc
     pkgs.fastfetch
 

@@ -43,9 +43,14 @@
         source ~/.config/fish/completions/granted.fish
       end
 
+      function nixbootstrap
+        echo "Bootstrapping nix-darwin from ~/nixfiles-openclaw..."
+        sudo /nix/var/nix/profiles/default/bin/nix run github:LnL7/nix-darwin -- switch --flake /Users/(whoami)/nixfiles-openclaw#wz-oc
+      end
+
       function nixswitch
         if not test -f /etc/nix-host
-          echo "Error: /etc/nix-host not found. Run darwin-rebuild manually first."
+          echo "Error: /etc/nix-host not found. Run nixbootstrap first."
           return 1
         end
         set -l host (cat /etc/nix-host)

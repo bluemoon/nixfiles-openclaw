@@ -37,6 +37,10 @@
       url = "github:openclaw/nix-openclaw";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
@@ -71,6 +75,12 @@
           })
           ({ config, pkgs, lib, ... }: {
             nix.enable = true;
+            nix.settings = {
+              substituters = [ "https://claude-code.cachix.org" ];
+              trusted-public-keys = [
+                "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+              ];
+            };
             nixpkgs = {
               config.allowBroken = true;
               config.allowUnfree = true;
