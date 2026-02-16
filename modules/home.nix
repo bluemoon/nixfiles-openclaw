@@ -155,7 +155,7 @@
     [connections.default]
     account = "so07687.us-east-2.aws"
     user = "BRADFORD_TONEY"
-    role = "ANALYST"
+    role = "ANALYST_ROLE"
     warehouse = "ANALYST_WAREHOUSE"
     database = "DBT_PROD"
     schema = "ANALYTICS"
