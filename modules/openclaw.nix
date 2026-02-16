@@ -26,13 +26,20 @@
         allowFrom = [ 7494222458 ];
       };
 
-      env.vars = { ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key"; };
+      # ANTHROPIC_API_KEY is injected via bundledPlugins.oracle.config.env below,
+      # NOT here. env.vars writes literal strings into the JSON — the gateway
+      # would send the file path to Anthropic instead of the key contents.
     };
 
     bundledPlugins = {
       summarize.enable = true;
       peekaboo.enable = true;
-      oracle.enable = true;
+      # oracle plugin carries ANTHROPIC_API_KEY: the gateway wrapper reads the
+      # agenix file at runtime and exports the contents as a real env var.
+      oracle = {
+        enable = true;
+        config.env.ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
+      };
       poltergeist.enable = true;
       sag.enable = true;
       camsnap.enable = true;
