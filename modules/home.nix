@@ -104,16 +104,13 @@
     pkgs.gh
     pkgs.gnupg
     pkgs.htop
-    pkgs.jq
+    # jq, ripgrep, curl, nodejs, git, python3 — provided by openclaw batteries bundle
     pkgs.just
-    pkgs.nodejs
     pkgs.nixfmt-classic
     pkgs.openssl
-    pkgs.ripgrep
     pkgs.nil
     pkgs.tmux
     pkgs.tree
-    pkgs.curl
     pkgs.age
     inputs.agenix.packages.aarch64-darwin.default
 
