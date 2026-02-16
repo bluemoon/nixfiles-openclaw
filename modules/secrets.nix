@@ -4,8 +4,7 @@ let
   isWzOc = hostname == "wz-oc";
   primaryUser = config.system.primaryUser;
 in {
-  age.identityPaths =
-    [ "/Users/${primaryUser}/.ssh/id_ed25519" ];
+  age.identityPaths = [ "/Users/${primaryUser}/.ssh/id_ed25519" ];
 
   age.secrets = lib.mkIf isWzOc {
     openclaw-telegram-token = {
@@ -20,6 +19,11 @@ in {
     };
     openclaw-gateway-token = {
       file = ../secrets/openclaw-gateway-token.age;
+      owner = primaryUser;
+      mode = "600";
+    };
+    snowflake-rsa-key = {
+      file = ../secrets/snowflake-rsa-key.age;
       owner = primaryUser;
       mode = "600";
     };

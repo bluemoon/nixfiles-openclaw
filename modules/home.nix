@@ -126,6 +126,12 @@
     pkgs.procs
     pkgs.duf
 
+    # Data
+    (pkgs.snowflake-cli.overrideAttrs (old: {
+      doCheck = false;
+      doInstallCheck = false;
+    }))
+
     # Network/HTTP
     pkgs.xh
 
@@ -141,6 +147,17 @@
 
     inputs.nixvim-config.packages.${pkgs.system}.default
   ];
+
+  home.file.".snowflake/config.toml".text = ''
+    [connections.default]
+    account = "so07687.us-east-2.aws"
+    user = "BRADFORD_TONEY"
+    role = "ANALYST_ROLE"
+    warehouse = "PC_DBT_WH"
+    database = "DBT_DEV_BTONEY"
+    authenticator = "SNOWFLAKE_JWT"
+    private_key_path = "/run/agenix/snowflake-rsa-key"
+  '';
 
   imports = [ ./home-manager/fish.nix ./home-manager/tmux.nix ];
 }

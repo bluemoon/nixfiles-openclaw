@@ -10,4 +10,7 @@ in {
   "openclaw-telegram-token.age".publicKeys = allKeys;
   "openclaw-anthropic-key.age".publicKeys = allKeys;
   "openclaw-gateway-token.age".publicKeys = allKeys;
+
+  # Snowflake
+  "snowflake-rsa-key.age".publicKeys = allKeys;
 }
