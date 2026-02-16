@@ -148,18 +148,19 @@
   # Write snowflake config directly (not via home.file symlink) so we can
   # set 0600 permissions — snowflake-cli rejects world-readable configs.
   home.activation.snowflakeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p "$HOME/.snowflake"
+            mkdir -p "$HOME/.snowflake"
         cat > "$HOME/.snowflake/config.toml" << 'TOML'
     [connections.default]
     account = "so07687.us-east-2.aws"
     user = "BRADFORD_TONEY"
-    role = "ANALYST_ROLE"
-    warehouse = "PC_DBT_WH"
-    database = "DBT_DEV_BTONEY"
+    role = "ANALYST"
+    warehouse = "ANALYST_WAREHOUSE"
+    database = "DBT_PROD"
+    schema = "ANALYTICS"
     authenticator = "SNOWFLAKE_JWT"
     private_key_path = "/run/agenix/snowflake-rsa-key"
     TOML
-        chmod 0600 "$HOME/.snowflake/config.toml"
+            chmod 0600 "$HOME/.snowflake/config.toml"
   '';
 
   imports = [ ./home-manager/fish.nix ./home-manager/tmux.nix ];
