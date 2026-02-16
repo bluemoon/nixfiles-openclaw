@@ -23,7 +23,7 @@
 
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
-        allowFrom = [ ]; # TODO: add your Telegram chat ID here
+        allowFrom = [ 7494222458 ];
       };
 
       env.vars = { ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key"; };
