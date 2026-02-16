@@ -1,16 +1,12 @@
-{ config, pkgs, inputs, ... }:
-let
-  # Use nix-openclaw's own packages (built against its pinned nixpkgs)
-  # to avoid fetchPnpmDeps mismatch with our nixpkgs
-  openclawPkgs =
-    inputs.nix-openclaw.packages.${pkgs.stdenv.hostPlatform.system};
-in {
+{ config, pkgs, inputs, ... }: {
   imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
 
   programs.openclaw = {
     enable = true;
-    package = openclawPkgs.openclaw;
     documents = ./openclaw-documents;
+
+    # Exclude tools with broken downloads or that we don't need
+    excludeTools = [ "bird" "sonoscli" "imsg" "gogcli" "goplaces" ];
 
     # Use explicit instance so the submodule type system provides defaults
     # (works around missing nixMode in defaultInstance hardcoded attrset)

@@ -76,9 +76,11 @@
           ({ config, pkgs, lib, ... }: {
             nix.enable = true;
             nix.settings = {
-              substituters = [ "https://claude-code.cachix.org" ];
+              substituters =
+                [ "https://claude-code.cachix.org" "https://cache.garnix.io" ];
               trusted-public-keys = [
                 "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+                "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
               ];
             };
             nixpkgs = {
@@ -92,13 +94,29 @@
                 # against our nixpkgs which lacks fetchPnpmDeps).
                 (final: prev:
                   let
-                    oc =
-                      nix-openclaw.packages.${prev.stdenv.hostPlatform.system};
+                    system = prev.stdenv.hostPlatform.system;
+                    oc = nix-openclaw.packages.${system};
+                    # For withTools: import nix-openclaw's package builder using its own nixpkgs
+                    ocNixpkgs =
+                      import nix-openclaw.inputs.nixpkgs { inherit system; };
+                    ocSrc = nix-openclaw;
+                    steipetePkgs = if nix-openclaw.inputs.nix-steipete-tools
+                    ? packages && builtins.hasAttr system
+                    nix-openclaw.inputs.nix-steipete-tools.packages then
+                      nix-openclaw.inputs.nix-steipete-tools.packages.${system}
+                    else
+                      { };
                   in {
                     inherit (oc) openclaw openclaw-gateway openclaw-tools;
                     openclawPackages = oc // {
                       toolNames = [ ];
-                      withTools = _: oc;
+                      withTools =
+                        { toolNamesOverride ? null, excludeToolNames ? [ ] }:
+                        import "${ocSrc}/nix/packages" {
+                          pkgs = ocNixpkgs;
+                          inherit steipetePkgs toolNamesOverride
+                            excludeToolNames;
+                        };
                     };
                   })
               ];
