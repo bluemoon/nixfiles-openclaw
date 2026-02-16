@@ -145,12 +145,11 @@
     inputs.nixvim-config.packages.${pkgs.system}.default
   ];
 
-  home.activation.snowflakePermissions =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      chmod 0600 "$HOME/.snowflake/config.toml" 2>/dev/null || true
-    '';
-
-  home.file.".snowflake/config.toml".text = ''
+  # Write snowflake config directly (not via home.file symlink) so we can
+  # set 0600 permissions — snowflake-cli rejects world-readable configs.
+  home.activation.snowflakeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p "$HOME/.snowflake"
+        cat > "$HOME/.snowflake/config.toml" << 'TOML'
     [connections.default]
     account = "so07687.us-east-2.aws"
     user = "BRADFORD_TONEY"
@@ -159,6 +158,8 @@
     database = "DBT_DEV_BTONEY"
     authenticator = "SNOWFLAKE_JWT"
     private_key_path = "/run/agenix/snowflake-rsa-key"
+    TOML
+        chmod 0600 "$HOME/.snowflake/config.toml"
   '';
 
   imports = [ ./home-manager/fish.nix ./home-manager/tmux.nix ];
