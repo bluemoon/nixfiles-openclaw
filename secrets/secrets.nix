@@ -9,6 +9,7 @@ in {
   # OpenClaw secrets (wz-oc)
   "openclaw-telegram-token.age".publicKeys = allKeys;
   "openclaw-anthropic-key.age".publicKeys = allKeys;
+  "openclaw-openai-key.age".publicKeys = allKeys;
   "openclaw-gateway-token.age".publicKeys = allKeys;
 
   # Snowflake

@@ -17,6 +17,11 @@ in {
       owner = primaryUser;
       mode = "600";
     };
+    openclaw-openai-key = {
+      file = ../secrets/openclaw-openai-key.age;
+      owner = primaryUser;
+      mode = "600";
+    };
     openclaw-gateway-token = {
       file = ../secrets/openclaw-gateway-token.age;
       owner = primaryUser;

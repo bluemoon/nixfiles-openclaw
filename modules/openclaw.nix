@@ -51,7 +51,10 @@
       # agenix file at runtime and exports the contents as a real env var.
       oracle = {
         enable = true;
-        config.env.ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
+        config.env = {
+          ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
+          OPENAI_API_KEY = "/run/agenix/openclaw-openai-key";
+        };
       };
       poltergeist.enable = true;
       sag.enable = true;
