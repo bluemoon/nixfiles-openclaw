@@ -35,7 +35,7 @@
     };
     nix-openclaw = {
       url = "github:openclaw/nix-openclaw";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Don't override nixpkgs — gateway needs fetchPnpmDeps from its own pin
     };
     claude-code = {
       url = "github:sadjow/claude-code-nix";
