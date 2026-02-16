@@ -1,4 +1,4 @@
-{ config, pkgs, home-manager, inputs, ... }:
+{ config, lib, pkgs, home-manager, inputs, ... }:
 
 {
   # Let Home Manager install and manage itself.
@@ -144,6 +144,11 @@
 
     inputs.nixvim-config.packages.${pkgs.system}.default
   ];
+
+  home.activation.snowflakePermissions =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      chmod 0600 "$HOME/.snowflake/config.toml" 2>/dev/null || true
+    '';
 
   home.file.".snowflake/config.toml".text = ''
     [connections.default]
