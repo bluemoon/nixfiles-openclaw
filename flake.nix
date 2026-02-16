@@ -77,7 +77,6 @@
             nix.enable = false; # Determinate Nix manages the daemon
             # Caches: configure via `determinate-nixd` or /etc/nix/nix.conf on the machine
             # claude-code.cachix.org, cache.garnix.io
-            };
             nixpkgs = {
               config.allowBroken = true;
               config.allowUnfree = true;
