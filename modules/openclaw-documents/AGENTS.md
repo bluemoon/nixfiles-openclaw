@@ -2,7 +2,7 @@
 
 ## Oracle
 - **Purpose:** Strategic technical advisor for complex architecture, hard debugging, code review
-- **Model:** `openai/o3` (override via `sessions_spawn(model="openai/o3")`)
+- **Model:** `openai/gpt-5.2`
 - **Label:** `oracle`
 - **When to use:** Architecture decisions, 2+ failed fix attempts, security/perf concerns, multi-system tradeoffs
 - **When NOT to use:** Simple tasks, first attempts, trivial decisions
