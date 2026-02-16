@@ -1,5 +1,18 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, lib, inputs, ... }: {
   imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
+
+  # Ensure the gateway's launchd job has nix profile paths so agent-spawned
+  # shell commands (rg, jq, etc.) are found.
+  launchd.agents."com.steipete.openclaw.gateway".config.EnvironmentVariables.PATH =
+    lib.mkForce (lib.concatStringsSep ":" [
+      "/etc/profiles/per-user/wz_oc/bin"
+      "/run/current-system/sw/bin"
+      "/nix/var/nix/profiles/default/bin"
+      "/usr/bin"
+      "/bin"
+      "/usr/sbin"
+      "/sbin"
+    ]);
 
   programs.openclaw = {
     enable = true;
