@@ -84,7 +84,24 @@
             nixpkgs = {
               config.allowBroken = true;
               config.allowUnfree = true;
-              overlays = with inputs; [ nur.overlays.default ];
+              overlays = with inputs; [
+                nur.overlays.default
+                # Thin shim: expose nix-openclaw's pre-built packages in pkgs.*
+                # so the HM module's lib.nix can reference pkgs.openclaw / pkgs.openclawPackages.
+                # We do NOT use the upstream overlay (it callPackage's openclaw-gateway
+                # against our nixpkgs which lacks fetchPnpmDeps).
+                (final: prev:
+                  let
+                    oc =
+                      nix-openclaw.packages.${prev.stdenv.hostPlatform.system};
+                  in {
+                    inherit (oc) openclaw openclaw-gateway openclaw-tools;
+                    openclawPackages = oc // {
+                      toolNames = [ ];
+                      withTools = _: oc;
+                    };
+                  })
+              ];
             };
           })
         ];
