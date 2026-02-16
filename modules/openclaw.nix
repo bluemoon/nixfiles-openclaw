@@ -1,8 +1,6 @@
 { config, pkgs, inputs, ... }: {
 
-  imports = [
-    inputs.nix-openclaw.homeManagerModules.default
-  ];
+  imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
 
   programs.openclaw = {
     enable = true;
@@ -11,9 +9,7 @@
     config = {
       gateway = {
         mode = "local";
-        auth = {
-          token = "/run/agenix/openclaw-gateway-token";
-        };
+        auth = { token = "/run/agenix/openclaw-gateway-token"; };
       };
 
       channels.telegram = {
