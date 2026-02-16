@@ -104,9 +104,7 @@
     pkgs.gh
     pkgs.gnupg
     pkgs.htop
-    # jq, curl, nodejs, git, python3 — provided by openclaw batteries bundle
-    pkgs.ripgrep
-    pkgs.jq
+    # ripgrep, jq, curl, nodejs, git, python3 — provided by openclaw batteries bundle
     pkgs.just
     pkgs.nixfmt-classic
     pkgs.openssl
