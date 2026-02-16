@@ -74,14 +74,9 @@
             environment.etc."nix-host".text = "wz-oc";
           })
           ({ config, pkgs, lib, ... }: {
-            nix.enable = true;
-            nix.settings = {
-              substituters =
-                [ "https://claude-code.cachix.org" "https://cache.garnix.io" ];
-              trusted-public-keys = [
-                "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
-                "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-              ];
+            nix.enable = false; # Determinate Nix manages the daemon
+            # Caches: configure via `determinate-nixd` or /etc/nix/nix.conf on the machine
+            # claude-code.cachix.org, cache.garnix.io
             };
             nixpkgs = {
               config.allowBroken = true;
