@@ -34,6 +34,8 @@
         auth = { token = "/run/agenix/openclaw-gateway-token"; };
       };
 
+      agents.defaults.subagents.model = "openai/gpt-5.2";
+
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ 7494222458 ];
