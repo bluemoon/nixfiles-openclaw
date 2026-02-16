@@ -84,10 +84,7 @@
             nixpkgs = {
               config.allowBroken = true;
               config.allowUnfree = true;
-              overlays = with inputs; [
-                nur.overlays.default
-                nix-openclaw.overlays.default
-              ];
+              overlays = with inputs; [ nur.overlays.default ];
             };
           })
         ];

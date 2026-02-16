@@ -1,9 +1,15 @@
-{ config, pkgs, inputs, ... }: {
-
+{ config, pkgs, inputs, ... }:
+let
+  # Use nix-openclaw's own packages (built against its pinned nixpkgs)
+  # to avoid fetchPnpmDeps mismatch with our nixpkgs
+  openclawPkgs =
+    inputs.nix-openclaw.packages.${pkgs.stdenv.hostPlatform.system};
+in {
   imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
 
   programs.openclaw = {
     enable = true;
+    package = openclawPkgs.openclaw;
     documents = ./openclaw-documents;
 
     # Use explicit instance so the submodule type system provides defaults
