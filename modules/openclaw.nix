@@ -39,7 +39,11 @@
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ 7494222458 8200770039 ];
+        groupPolicy = "allowlist";
         groupAllowFrom = [ 7494222458 8200770039 ];
+        groups."*" = {
+          requireMention = true;
+        };
       };
 
       # ANTHROPIC_API_KEY is injected via bundledPlugins.oracle.config.env below,
