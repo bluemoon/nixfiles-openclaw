@@ -139,6 +139,11 @@
     # AI
     inputs.claude-code.packages.${pkgs.system}.default
 
+    # MCP
+    (pkgs.writeShellScriptBin "mcporter" ''
+      exec ${pkgs.nodejs_22}/bin/npx -y mcporter "$@"
+    '')
+
     # Misc
     pkgs.fastfetch
 
