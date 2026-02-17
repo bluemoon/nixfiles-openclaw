@@ -1,4 +1,8 @@
 { config, pkgs, lib, inputs, ... }: {
+  # Custom skills (no bundled plugin — just a SKILL.md)
+  home.file.".openclaw/workspace/skills/snowflake/SKILL.md".source =
+    ./openclaw-skills/snowflake/SKILL.md;
+
   imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
 
   # Ensure the gateway's launchd job has nix profile paths so agent-spawned
