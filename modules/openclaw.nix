@@ -38,9 +38,9 @@
 
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
-        allowFrom = [ 7494222458 8200770039 ];
+        allowFrom = [ 7494222458 8200770039 8471427964 ];
         groupPolicy = "allowlist";
-        groupAllowFrom = [ 7494222458 8200770039 ];
+        groupAllowFrom = [ 7494222458 8200770039 8471427964 ];
         groups."*" = {
           requireMention = true;
         };
