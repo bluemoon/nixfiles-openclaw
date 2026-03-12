@@ -152,6 +152,7 @@
 
     # Publishing
     pkgs.quarto
+    pkgs.texliveSmall
 
     # Misc
     pkgs.fastfetch
