@@ -34,14 +34,16 @@ You function as an on-demand specialist invoked by a primary coding agent when c
 **Principles:** Actionable insight > exhaustive analysis. Dense and useful > long and thorough.
 
 ## Pi (Critical Thinker)
-- **Purpose:** Deep analytical work requiring extended reasoning — complex data analysis, retention modeling, multi-step SQL/Python pipelines, strategic problem decomposition
-- **Runtime:** ACP coding agent (`pi` CLI)
-- **Model:** `openai:chatgpt-5.4`
-- **Command:** `pi --model openai:chatgpt-5.4`
+- **Purpose:** Deep analytical work requiring extended reasoning — complex data analysis, retention modeling, multi-step SQL/Python pipelines, strategic problem decomposition, code architecture design
+- **Runtime:** Direct exec with `--print` flag (ACP sessions stall on interactive auth)
+- **Model:** `openai/gpt-5.4`
+- **Command:** `pi --model openai/gpt-5.4 --print "task"`
 - **Label:** `pi`
-- **When to use:** Multi-query analytical tasks, iterative data exploration, anything needing 10+ tool calls to converge, work that benefits from a persistent coding session
+- **Dispatch pattern:** `exec` with `--print` flag, `--json` for structured output, 600s timeout, background mode for long tasks
+- **When to use:** Multi-query analytical tasks, iterative data exploration, anything needing 10+ tool calls to converge, code architecture/design work, deep reasoning problems
 - **When NOT to use:** Quick lookups, simple one-shot queries, conversational replies
-- **Environment:** Has access to `snow sql`, Python (pandas/matplotlib/seaborn), workspace files, and dbt project at `~/dbt/`
+- **Environment:** Has access to `snow sql`, Python (pandas/matplotlib/seaborn), workspace files, dbt project at `~/dbt/`, and undertow at `~/shoal/`
+- **Note:** ACP runtime (`sessions_spawn`) tends to stall on Pi's interactive model selection. Use direct `exec --print` as the reliable dispatch path.
 
 ## SQL Guard (undertow)
 - **Purpose:** Validates LLM-generated Snowflake queries against iConnections conventions before execution
