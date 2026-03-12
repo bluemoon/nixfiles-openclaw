@@ -44,6 +44,10 @@
 
       agents.defaults.subagents.model = "openai/gpt-5.4";
 
+      agents.defaults.models."openai/gpt-5.4".params = {
+        reasoning_effort = "xhigh";
+      };
+
       acp = {
         enabled = true;
         defaultAgent = "pi";
