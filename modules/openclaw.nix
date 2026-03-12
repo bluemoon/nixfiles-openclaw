@@ -54,6 +54,8 @@
         allowedAgents = [ "pi" "claude-code" ];
       };
 
+      plugins.entries.acpx.enabled = true;
+
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ 7494222458 8200770039 8471427964 ];
@@ -70,7 +72,6 @@
 };
 
     bundledPlugins = {
-      acpx.enable = true;
       summarize.enable = true;
       peekaboo.enable = true;
       poltergeist.enable = true;
