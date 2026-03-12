@@ -182,7 +182,7 @@
       nx = "cd ~/nixfiles-openclaw";
 
       # AI
-      pia = "pi --model openai:chatgpt-5.4";
+      pia = "pi --model openai/gpt-5.4";
 
       # Git shortcuts
       gapa = "git add --patch";
