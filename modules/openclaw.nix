@@ -54,7 +54,13 @@
         allowedAgents = [ "pi" "claude-code" ];
       };
 
-      plugins.entries.acpx.enabled = true;
+      plugins.entries.acpx = {
+        enabled = true;
+        config = {
+          command = "/etc/profiles/per-user/wz_oc/bin/acpx";
+          expectedVersion = "any";
+        };
+      };
 
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
