@@ -4,7 +4,10 @@ let
   isWzOc = hostname == "wz-oc";
   primaryUser = config.system.primaryUser;
 in {
-  age.identityPaths = [ "/Users/${primaryUser}/.ssh/id_ed25519" ];
+  age.identityPaths = [
+    "/Users/${primaryUser}/.config/agenix/age-key.txt"
+    "/Users/${primaryUser}/.ssh/id_ed25519"
+  ];
 
   age.secrets = lib.mkIf isWzOc {
     openclaw-telegram-token = {

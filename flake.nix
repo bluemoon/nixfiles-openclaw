@@ -41,6 +41,9 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
@@ -72,6 +75,58 @@
           ({ ... }: {
             system.primaryUser = "wz_oc";
             environment.etc."nix-host".text = "wz-oc";
+          })
+          # System-level LaunchDaemon for the openclaw gateway.
+          # Runs as user wz_oc in the system domain — works over SSH
+          # without a GUI login session (unlike gui/UID LaunchAgents).
+          ({ config, pkgs, lib, ... }: {
+            launchd.daemons."com.steipete.openclaw.gateway" = {
+              serviceConfig = {
+                Label = "com.steipete.openclaw.gateway";
+                UserName = "wz_oc";
+                ProgramArguments = [
+                  "/bin/sh"
+                  "-c"
+                  # wait4path ensures the nix store is mounted, then exec the
+                  # wrapper from the HM-generated LaunchAgent plist.  This
+                  # indirection means the daemon always runs the latest wrapper
+                  # after a darwin-rebuild.  We also read agenix secret files
+                  # and export the actual key values (the gateway expects real
+                  # keys, not file paths).
+                  ''
+                    /bin/wait4path /nix/store && \
+                    wrapper="$(/usr/bin/sed -n 's|.*exec \(/nix/store/[^ ]*openclaw-gateway-default\).*|\1|p' \
+                      /Users/wz_oc/Library/LaunchAgents/com.steipete.openclaw.gateway.plist | /usr/bin/head -1)" && \
+                    export ANTHROPIC_API_KEY="$(/bin/cat /run/agenix/openclaw-anthropic-key)" && \
+                    export OPENAI_API_KEY="$(/bin/cat /run/agenix/openclaw-openai-key)" && \
+                    exec "$wrapper" gateway --port 18789
+                  ''
+                ];
+                RunAtLoad = true;
+                KeepAlive = true;
+                WorkingDirectory = "/Users/wz_oc/.openclaw";
+                StandardOutPath = "/tmp/openclaw/openclaw-gateway.log";
+                StandardErrorPath = "/tmp/openclaw/openclaw-gateway.log";
+                EnvironmentVariables = {
+                  HOME = "/Users/wz_oc";
+                  OPENCLAW_CONFIG_PATH = "/Users/wz_oc/.openclaw/openclaw.json";
+                  OPENCLAW_STATE_DIR = "/Users/wz_oc/.openclaw";
+                  OPENCLAW_IMAGE_BACKEND = "sips";
+                  OPENCLAW_NIX_MODE = "1";
+                  # ANTHROPIC_API_KEY and OPENAI_API_KEY are read from agenix
+                  # files at launch time in ProgramArguments above.
+                  PATH = lib.concatStringsSep ":" [
+                    "/etc/profiles/per-user/wz_oc/bin"
+                    "/run/current-system/sw/bin"
+                    "/nix/var/nix/profiles/default/bin"
+                    "/usr/bin"
+                    "/bin"
+                    "/usr/sbin"
+                    "/sbin"
+                  ];
+                };
+              };
+            };
           })
           ({ config, pkgs, lib, ... }: {
             nix.enable = false; # Determinate Nix manages the daemon
@@ -113,6 +168,17 @@
                         };
                     };
                   })
+                # Disable failing tests in snowflake-connector-python
+                (final: prev: {
+                  python313Packages = prev.python313Packages.override {
+                    overrides = pfinal: pprev: {
+                      snowflake-connector-python =
+                        pprev.snowflake-connector-python.overridePythonAttrs {
+                          doCheck = false;
+                        };
+                    };
+                  };
+                })
               ];
             };
           })

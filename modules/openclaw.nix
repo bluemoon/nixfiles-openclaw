@@ -1,10 +1,15 @@
 { config, pkgs, lib, inputs, ... }: {
   imports = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
 
-  # Ensure the gateway's launchd job has nix profile paths so agent-spawned
-  # shell commands (rg, jq, etc.) are found.
-  launchd.agents."com.steipete.openclaw.gateway".config.EnvironmentVariables.PATH =
-    lib.mkForce (lib.concatStringsSep ":" [
+  # On headless/SSH-only machines the gui/UID launchd domain isn't available,
+  # so HM's LaunchAgent fails to load.  We keep it enabled (so the plist +
+  # wrapper are still built) but suppress the activation-time bootout/bootstrap
+  # errors.  A system-level LaunchDaemon in the darwin config loads the
+  # gateway as user wz_oc instead.
+
+  # Inject env vars into the HM-generated plist (used by the LaunchDaemon).
+  launchd.agents."com.steipete.openclaw.gateway".config.EnvironmentVariables = {
+    PATH = lib.mkForce (lib.concatStringsSep ":" [
       "/etc/profiles/per-user/wz_oc/bin"
       "/run/current-system/sw/bin"
       "/nix/var/nix/profiles/default/bin"
@@ -13,6 +18,9 @@
       "/usr/sbin"
       "/sbin"
     ]);
+    ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
+    OPENAI_API_KEY = "/run/agenix/openclaw-openai-key";
+  };
 
   programs.openclaw = {
     enable = true;
@@ -46,23 +54,14 @@
         };
       };
 
-      # ANTHROPIC_API_KEY is injected via bundledPlugins.oracle.config.env below,
-      # NOT here. env.vars writes literal strings into the JSON — the gateway
-      # would send the file path to Anthropic instead of the key contents.
-    };
+      # ANTHROPIC_API_KEY and OPENAI_API_KEY are read from agenix files
+      # and exported as real key values by the system LaunchDaemon's
+      # ProgramArguments script in flake.nix.
+};
 
     bundledPlugins = {
       summarize.enable = true;
       peekaboo.enable = true;
-      # oracle plugin carries ANTHROPIC_API_KEY: the gateway wrapper reads the
-      # agenix file at runtime and exports the contents as a real env var.
-      oracle = {
-        enable = true;
-        config.env = {
-          ANTHROPIC_API_KEY = "/run/agenix/openclaw-anthropic-key";
-          OPENAI_API_KEY = "/run/agenix/openclaw-openai-key";
-        };
-      };
       poltergeist.enable = true;
       sag.enable = true;
       camsnap.enable = true;
