@@ -42,7 +42,7 @@
         auth = { token = "/run/agenix/openclaw-gateway-token"; };
       };
 
-      agents.defaults.subagents.model = "openai/gpt-5.2";
+      agents.defaults.subagents.model = "openai/gpt-5.4";
 
       acp = {
         enabled = true;
