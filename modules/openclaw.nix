@@ -44,6 +44,12 @@
 
       agents.defaults.subagents.model = "openai/gpt-5.2";
 
+      acp = {
+        enabled = true;
+        defaultAgent = "pi";
+        allowedAgents = [ "pi" "claude-code" ];
+      };
+
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ 7494222458 8200770039 8471427964 ];
@@ -60,6 +66,7 @@
 };
 
     bundledPlugins = {
+      acpx.enable = true;
       summarize.enable = true;
       peekaboo.enable = true;
       poltergeist.enable = true;
