@@ -145,6 +145,11 @@
       exec ${pkgs.nodejs_22}/bin/npx -y mcporter "$@"
     '')
 
+    # ACP runtime
+    (pkgs.writeShellScriptBin "acpx" ''
+      exec ${pkgs.nodejs_22}/bin/npx -y acpx "$@"
+    '')
+
     # Publishing
     pkgs.quarto
 
