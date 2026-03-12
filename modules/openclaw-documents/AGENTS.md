@@ -42,3 +42,19 @@ You function as an on-demand specialist invoked by a primary coding agent when c
 - **When to use:** Multi-query analytical tasks, iterative data exploration, anything needing 10+ tool calls to converge, work that benefits from a persistent coding session
 - **When NOT to use:** Quick lookups, simple one-shot queries, conversational replies
 - **Environment:** Has access to `snow sql`, Python (pandas/matplotlib/seaborn), workspace files, and dbt project at `~/dbt/`
+
+## SQL Guard (undertow)
+- **Purpose:** Validates LLM-generated Snowflake queries against iConnections conventions before execution
+- **Repo:** `github.com:bluemoon/undertow`
+- **Location:** `~/shoal/sql_guard.py` (+ `snow_safe.py` wrapper)
+- **Runtime:** Python CLI (`python3 sql_guard.py "SELECT ..."`)
+- **Dependencies:** `sqlglot`
+- **When to use:** Before executing any LLM-generated SQL against Snowflake — catches missing required filters, bad patterns, common mistakes
+- **Rules enforced:**
+  - `MEETING_DATA` must filter: `DERIVED_MEETING_STATUS='Confirmed'`, `CONSOLIDATED_ISDELETED=false`, `ICONNECTIONS_MEETING=false`, `ISDELETED=false`
+  - `EVENT_CONTACTS` must filter: `EC_EVENTSTATUS='Confirmed'`, `TIME_ADJUSTED_EVENTSTATUS ILIKE '%Confirmed%'`, `ISDELETED=false`, `EC_ISDELETED=false`
+  - No `'Confirmed - Other'` in meeting status
+  - `COUNT(DISTINCT MEETINGID)` for meeting counts (per-contact grain)
+  - Exclude `iconn` company names in GP queries
+  - No `SELECT *`
+  - `EVENT_COMPANIES` dedup reminder (`GROUP BY COMPANYID`)
