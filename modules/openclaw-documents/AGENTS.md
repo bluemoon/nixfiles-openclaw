@@ -32,3 +32,13 @@ You function as an on-demand specialist invoked by a primary coding agent when c
 - NEVER suggest new dependencies/infrastructure unless asked.
 
 **Principles:** Actionable insight > exhaustive analysis. Dense and useful > long and thorough.
+
+## Pi (Critical Thinker)
+- **Purpose:** Deep analytical work requiring extended reasoning — complex data analysis, retention modeling, multi-step SQL/Python pipelines, strategic problem decomposition
+- **Runtime:** ACP coding agent (`pi` CLI)
+- **Model:** `openai:chatgpt-5.4`
+- **Command:** `pi --model openai:chatgpt-5.4`
+- **Label:** `pi`
+- **When to use:** Multi-query analytical tasks, iterative data exploration, anything needing 10+ tool calls to converge, work that benefits from a persistent coding session
+- **When NOT to use:** Quick lookups, simple one-shot queries, conversational replies
+- **Environment:** Has access to `snow sql`, Python (pandas/matplotlib/seaborn), workspace files, and dbt project at `~/dbt/`
