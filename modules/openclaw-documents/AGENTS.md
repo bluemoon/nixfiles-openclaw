@@ -9,7 +9,7 @@
 - **Command:** `pi --model openai/gpt-5.4 --print "task"` (exec, 600s timeout)
 - **When to use:** Heavy analytical work, multi-step SQL/Python, code design
 - **Note:** ACP stalls on interactive auth — use `exec --print`
-- **Snowflake access:** Use `snow sql -q "QUERY"` or `snow sql -f /tmp/file.sql` or `snow sql --format csv`. Do NOT use `snowflake.connector` or `pandas` — they are not installed. Stick to shell tools (`snow sql`, `awk`, `jq`, `python3 -c`).
+- **Data env:** Run inside `~/onyx/` (Nix flake devshell with Python 3.13, snowflake-connector-python, pandas, matplotlib, seaborn, scipy). Use `cd ~/onyx && nix develop -c <command>` or activate the venv at `~/onyx/.venv/`. Also has `snow sql` for quick queries.
 
 ## undertow
 - **Repo:** `github.com:bluemoon/undertow` (`~/shoal/`)
