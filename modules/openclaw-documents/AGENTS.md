@@ -11,8 +11,8 @@
 - **Note:** ACP stalls on interactive auth — use `exec --print`
 
 ## Data Analysis Workflow
-- **Env:** `~/onyx/` — Nix flake + direnv (Python 3.13, snowflake-connector-python, pandas, matplotlib, seaborn, scipy)
-- **Run:** `cd ~/onyx && direnv exec . python3 scripts/{date}-{request}.py`
+- **Env:** `~/onyx/` — Nix flake (Python 3.13, snowflake-connector-python, pandas, matplotlib, seaborn, scipy)
+- **Run:** `cd ~/onyx && nix develop --command python3 scripts/{date}-{request}.py`
 - **Snowflake:** JWT auth via `/run/agenix/snowflake-rsa-key`, account `so07687.us-east-2.aws`, user `BRADFORD_TONEY`, role `ANALYST_ROLE`, database `DBT_PROD`
 - **Script convention:** For every analysis request, write a self-contained script to `~/onyx/scripts/{YYYY-MM-DD}-{short-slug}.py`. Scripts should:
   - Connect to Snowflake via `snowflake.connector` with JWT auth
