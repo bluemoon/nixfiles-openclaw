@@ -42,11 +42,7 @@
         auth = { token = "/run/agenix/openclaw-gateway-token"; };
       };
 
-      agents.defaults.subagents.model = "openai/gpt-5.4";
-
-      agents.defaults.models."openai/gpt-5.4".params = {
-        reasoning_effort = "xhigh";
-      };
+      agents.defaults.subagents.model = "anthropic/claude-sonnet-4-6";
 
       acp = {
         enabled = true;
@@ -64,9 +60,9 @@
 
       channels.telegram = {
         tokenFile = "/run/agenix/openclaw-telegram-token";
-        allowFrom = [ 7494222458 8200770039 8471427964 ];
+        allowFrom = [ 7494222458 8200770039 8471427964 8710865304 ];
         groupPolicy = "allowlist";
-        groupAllowFrom = [ 7494222458 8200770039 8471427964 ];
+        groupAllowFrom = [ 7494222458 8200770039 8471427964 8710865304 ];
         groups."*" = {
           requireMention = true;
         };
