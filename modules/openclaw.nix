@@ -36,6 +36,7 @@
     # Use explicit instance so the submodule type system provides defaults
     # (works around missing nixMode in defaultInstance hardcoded attrset).
     # Config goes on the instance to avoid recursiveUpdate null-clobbering.
+    instances.default.package = pkgs.openclaw; # use overlay-patched package
     instances.default.config = {
       gateway = {
         mode = "local";
@@ -62,7 +63,7 @@
         tokenFile = "/run/agenix/openclaw-telegram-token";
         allowFrom = [ 7494222458 8200770039 8471427964 ];
         groupPolicy = "allowlist";
-        groupAllowFrom = [ 7494222458 8200770039 8471427964 8710865304 ];
+        groupAllowFrom = [ 7494222458 8200770039 8471427964 8710865304 8480973088 8727453490 ];
         groups."*" = {
           requireMention = true;
         };

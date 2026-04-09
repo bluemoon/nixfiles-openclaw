@@ -116,6 +116,7 @@
                   # ANTHROPIC_API_KEY and OPENAI_API_KEY are read from agenix
                   # files at launch time in ProgramArguments above.
                   PATH = lib.concatStringsSep ":" [
+                    "${pkgs.nodejs_22}/bin"
                     "/etc/profiles/per-user/wz_oc/bin"
                     "/run/current-system/sw/bin"
                     "/nix/var/nix/profiles/default/bin"
@@ -155,8 +156,29 @@
                       nix-openclaw.inputs.nix-steipete-tools.packages.${system}
                     else
                       { };
-                  in {
-                    inherit (oc) openclaw openclaw-gateway openclaw-tools;
+                  in rec {
+                    inherit (oc) openclaw-tools;
+                    # Workaround: upstream nix-openclaw build is missing the
+                    # runtime-postbuild step that copies openclaw.plugin.json
+                    # manifests into dist/extensions/. Patch the pre-built output.
+                    openclaw-gateway = prev.runCommand "openclaw-gateway-patched" {
+                      src = oc.openclaw-gateway;
+                    } ''
+                      cp -a $src $out
+                      chmod -R u+w $out/lib/openclaw/dist/extensions
+                      for manifest in $out/lib/openclaw/extensions/*/openclaw.plugin.json; do
+                        ext="$(basename "$(dirname "$manifest")")"
+                        target="$out/lib/openclaw/dist/extensions/$ext"
+                        if [ -d "$target" ] && [ ! -f "$target/openclaw.plugin.json" ]; then
+                          cp "$manifest" "$target/openclaw.plugin.json"
+                        fi
+                      done
+                    '';
+                    # Rewire the openclaw CLI to use the patched gateway.
+                    openclaw = prev.writeShellScriptBin "openclaw" ''
+                      export OPENCLAW_NIX_MODE=''${OPENCLAW_NIX_MODE-'1'}
+                      exec "${prev.nodejs_22}/bin/node" "${openclaw-gateway}/lib/openclaw/dist/index.js" "$@"
+                    '';
                     openclawPackages = oc // {
                       toolNames = [ ];
                       withTools =
